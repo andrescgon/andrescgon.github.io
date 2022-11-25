@@ -8,7 +8,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <meta name="viewport" content="initial-scale=1, maximum-scale=1">
       <!-- site metas -->
-      <title>INTELIGENCIA </title>
+      <title>INTELIGENCIA DE SONIDOS</title>
       <meta name="keywords" content="">
       <meta name="description" content="">
       <meta name="author" content="">
@@ -33,7 +33,7 @@
    <body class="main-layout">
       <!-- loader  -->
       <div class="loader_bg">
-         <div class="SAPO"><img src="images/loading.gif" alt="#" /></div>
+         <div class="loader"><img src="images/loading.gif" alt="#" /></div>
       </div>
       <!-- end loader -->
       <!-- header -->
@@ -46,7 +46,7 @@
                      <div class="full">
                         <div class="center-desk">
                            <div class="logo">
-                              <a href="index.html"><img1 src="images/IA.png" alt="#" /></a>
+                              <a href="index.html"><img1 src="images/IA.jpeg" alt="#" /></a>
                            </div>
                         </div>
                      </div>
@@ -62,7 +62,7 @@
                                  <a class="nav-link" href="index.html">IA</a>
                               </li>
                               <li class="nav-item active">
-                                 <a class="nav-link" class="si" href="iaImg.html"> IA IMG  </a>
+                                 <a class="nav-link" href="iaImg.html"> IA IMG  </a>
                               </li>
                               <li class="nav-item">
                                  <a class="nav-link" href="iaSound.html">IA SOUND</a>
@@ -71,8 +71,7 @@
                                  <a class="nav-link" href="iaPoses.html">IA POSTURAS </a>
                               </li>
                               <li class="nav-item">
-                              <a class="nav-link" href="https://deepnote.com/workspace/andres-castro-abf3-87ac12a3-8a4b-4c7f-bc56-00fd9fcd9616/project/Red-neuronal-92d5794a-bef9-4203-8420-684e6250c085/%2FNotebook%201.ipynb" target="_black">RED NEURONAL</a>
-                              </li>
+                                 <a class="nav-link" href="https://deepnote.com/workspace/andres-castro-abf3-87ac12a3-8a4b-4c7f-bc56-00fd9fcd9616/project/Red-neuronal-92d5794a-bef9-4203-8420-684e6250c085/%2FNotebook%201.ipynb" target="_black">RED NEURONAL</a>                              </li>
                            </ul>
                         </div>
                      </nav>
@@ -89,7 +88,65 @@
             <div class="row">
                <div class="col-md-12 ">
                   <div class="text-bg">
-                     <h1>NUESTRAS IA</h1>
+                     <h1>INTELIGENCIA ARTIFICIAL DE SONIDOS</h1>
+                     <div class="principal">
+                        <button class="start" type='button' onclick='init()'>Start</button>
+                        <div id="label-container" class="honta"></div>
+                        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+                        <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/speech-commands@0.4.0/dist/speech-commands.min.js"></script>
+                        
+                        <script type="text/javascript">
+                            // more documentation available at
+                            // https://github.com/tensorflow/tfjs-models/tree/master/speech-commands
+                        
+                            // the link to your model provided by Teachable Machine export panel
+                            const URL = "https://teachablemachine.withgoogle.com/models/VnHHYr1u8/";
+                        
+                            async function createModel() {
+                                const checkpointURL = URL + "model.json"; // model topology
+                                const metadataURL = URL + "metadata.json"; // model metadata
+                        
+                                const recognizer = speechCommands.create(
+                                    "BROWSER_FFT", // fourier transform type, not useful to change
+                                    undefined, // speech commands vocabulary feature, not useful for your models
+                                    checkpointURL,
+                                    metadataURL);
+                        
+                                // check that model and metadata are loaded via HTTPS requests.
+                                await recognizer.ensureModelLoaded();
+                        
+                                return recognizer;
+                            }
+                        
+                            async function init() {
+                                const recognizer = await createModel();
+                                const classLabels = recognizer.wordLabels(); // get class labels
+                                const labelContainer = document.getElementById("label-container");
+                                for (let i = 0; i < classLabels.length; i++) {
+                                    labelContainer.appendChild(document.createElement("div"));
+                                }
+                        
+                                // listen() takes two arguments:
+                                // 1. A callback function that is invoked anytime a word is recognized.
+                                // 2. A configuration object with adjustable fields
+                                recognizer.listen(result => {
+                                    const scores = result.scores; // probability of prediction for each class
+                                    // render the probability scores per class
+                                    for (let i = 0; i < classLabels.length; i++) {
+                                        const classPrediction = classLabels[i] + ": " + result.scores[i].toFixed(2);
+                                        labelContainer.childNodes[i].innerHTML = classPrediction;
+                                    }
+                                }, {
+                                    includeSpectrogram: true, // in case listen should return result.spectrogram
+                                    probabilityThreshold: 0.75,
+                                    invokeCallbackOnNoiseAndUnknown: true,
+                                    overlapFactor: 0.50 // probably want between 0.5 and 0.75. More info in README
+                                });
+                        
+                                // Stop the recognition in 5 seconds.
+                                // setTimeout(() => recognizer.stopListening(), 5000);
+                            }
+                        </script>
                   </div>
                </div>
             </div>
@@ -97,62 +154,6 @@
       </section>
       <!-- end banner -->
       <!-- three_box -->
-      <div class="three_box">
-         <div class="container">
-            <div class="row">
-               <div class="col-md-4">
-                  <div class="box_text">
-                     <figure><img src="images/ia1.jpg" alt="#"/></figure>
-                  </div>
-               </div>
-               <div class="col-md-4">
-                  <div class="box_text">
-                     <figure><img src="images/ia2.jpg" alt="#"/></figure>
-                  </div>
-               </div>
-               <div class="col-md-4">
-                  <div class="box_text">
-                     <figure><img src="images/ia3.jpg" alt="#"/></figure>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-      <!-- three_box -->
-      <!-- hottest -->
-      <div  class="hottest">
-         <div class="container">
-            <div class="row d_flex">
-               <div class="col-md-5">
-                  <div class="titlepage">
-                     <h2>Especificaciones de las IA </h2>
-                  </div>
-               </div>
-               <div class="col-md-7">
-                  <div class="hottest_box">
-                     <p>Imágenes: Para que la IA funcione de una manera óptima se le tiene que dar información principalmente un conjunto de imágenes las cuales la IA va reconociendo y siguiendo diferentes parámetros para facilitar su entrenamiento como: el color, tamaño, forma, figura...etc.</p>
-                     <p>Posturas: Para el apartado de posturas la IA lee el cuerpo y dependiendo de cómo lo vea le crea un esqueleto para entender que movimientos se están realizando, por medio de esas posturas las cuales va guardando hacen que la IA reconozca fácilmente la postura que se quiere identificar.</p>
-                     <p>Sonidos: Para el apartado de sonidos ya la situación es más técnica puesto a que la IA aprovecha tanto altos como bajos y timbre para poder reconocer el sonido el cual se está tratando identificar aparte de seguir un patrón entre las muestras de data que se le dan puede identificar de manera eficiente los sonidos que se quieran identificar. </p>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-      </div>
-      </div>
-      <!-- end hottest -->
-
-      <!-- choose  section -->
-      <!-- end choose  section -->
-
-      <!-- product  section -->
-      <!-- end product  section -->
-
-      <!-- about -->
-      
-      <!-- end about -->
-      </div>
-      <!--  footer -->
       <footer id="contact">
          <div class="footer">
             <div class="container">
